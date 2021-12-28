@@ -25,7 +25,7 @@
 </script>
 
 <main>
-	<div class="header">
+	<div class="header" style="background-color: #222">
 		<svg
 			class="logo"
 			viewBox="0 0 257 61"
@@ -52,7 +52,7 @@
 			<IconButton icon="search" />
 		</div>
 	</div>
-	<div style="grid-column: 1 / 2; padding: 32px;">
+	<div style="grid-column: 1 / 2; padding: 32px; background-color: #222">
 		{#if $playing}
 			<Glow>
 				{#if $playing.coverUrl}
@@ -93,7 +93,7 @@
 		</div>
 	</div>
 	<div
-		style="background-color: #222; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%;"
+		style="background-color: #000; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%;"
 	/>
 	<Modal id="serverManager" bind:open={openModal}>
 		<h1>Let's get connected.</h1>
