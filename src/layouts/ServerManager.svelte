@@ -94,7 +94,7 @@
 		<h2>Add Library</h2>
 		<h4>Connect to a server</h4>
 		<Prompt
-			prompt="http://nanote.example.com"
+			prompt="https://nanote.example.com"
 			onSubmit={(e) => setNewServerAddress(e)}
 		/>
 		{#if newServerProfiles.length > 0}

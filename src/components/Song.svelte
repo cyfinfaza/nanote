@@ -1,17 +1,31 @@
 <script>
 	export let song;
+	export let list;
+	export let index;
+	// if (list && index) {
+	// 	song = list[index];
+	// }
+	// $: if (list && index) {
+	// 	song = list[index];
+	// }
+	export let disabled = false;
 	import { servers } from "../logic/db";
-	import { playing } from "../logic/stores";
+	import { playing, queue, queueIndex } from "../logic/stores";
 	import { authString } from "../logic/utils";
 	let isPlaying = false;
-	$: isPlaying =
-		$playing.server == song.server && $playing.mediaUrl == song.mediaUrl;
+	$: $playing &&
+		(isPlaying =
+			$playing.server == song.server && $playing.mediaUrl == song.mediaUrl);
 	function playSong() {
-		$playing = song;
+		$queue = [...list];
+		$queueIndex = index;
 	}
 </script>
 
-<div class={"song" + (isPlaying ? " playing" : "")} on:click={playSong}>
+<div
+	class={"song" + (isPlaying ? " playing" : "") + (disabled ? " disabled" : "")}
+	on:click={!disabled && playSong}
+>
 	<span class="material-icons playIndicator"
 		>{#if isPlaying}
 			equalizer
@@ -19,7 +33,7 @@
 			play_arrow
 		{/if}</span
 	>
-	{#if song.coverUrl}
+	{#if song.coverUrl && authString($servers, song)}
 		<img
 			src={song.server + song.coverUrl + "?auth=" + authString($servers, song)}
 			alt=""
@@ -48,11 +62,11 @@
 		--transition: 120ms;
 		transition: var(--transition);
 		border-radius: 12px;
-		&:hover {
+		&:hover:not(.disabled) {
 			background: var(--fg);
 			cursor: pointer;
 		}
-		&:hover,
+		&:hover:not(.disabled),
 		&.playing {
 			.playIndicator {
 				width: 24px;

@@ -1,6 +1,9 @@
 import { writable } from "svelte/store";
 
 export const playing = writable({});
+export const playState = writable({});
+export const queue = writable([]);
+export const queueIndex = writable(0);
 
 export const library = writable([]);
 
