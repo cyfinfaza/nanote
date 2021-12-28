@@ -42,6 +42,7 @@ button, input {
   border-radius: calc(0.4 * var(--pad));
   height: var(--input-height);
   box-sizing: border-box;
+  color: inherit;
 }
 
 button {
