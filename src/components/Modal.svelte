@@ -9,7 +9,11 @@
 
 <div class={className}>
 	<div>
-		<IconButton icon="close" on:click={(_) => (open = "")} class="modalClose" />
+		<IconButton
+			icon="close"
+			on:click={(_) => (open = "")}
+			style="position: fixed; top: 16px; right: 16px;"
+		/>
 		<slot />
 	</div>
 </div>
@@ -21,16 +25,17 @@
 		justify-content: center;
 		align-items: center;
 		inset: 0;
-		background: #4444;
+		background: #1118;
 		opacity: 0;
 		--transition: 240ms cubic-bezier(0.87, 0.01, 0.1, 0.99);
 		transition: var(--transition);
 		pointer-events: none;
+		z-index: 99;
 		> div {
 			width: 80%;
 			// height: 80%;
 			max-width: 500px;
-			max-height: 350px;
+			max-height: min(500px, 100%);
 			transform: scale(0.5);
 			background: #222;
 			border-radius: 16px;

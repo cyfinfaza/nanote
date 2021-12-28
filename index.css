@@ -9,6 +9,7 @@ body {
   --fg-light: #fff6;
   --text: #fff;
   --pad: 16px;
+  --input-height: 44px;
 }
 
 :root {
@@ -39,6 +40,8 @@ button, input {
   border: none;
   padding: calc(0.6 * var(--pad));
   border-radius: calc(0.4 * var(--pad));
+  height: var(--input-height);
+  box-sizing: border-box;
 }
 
 button {

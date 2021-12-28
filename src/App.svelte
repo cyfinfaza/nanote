@@ -2,49 +2,75 @@
 	import Browser from "./layouts/Browser.svelte";
 	import Modal from "./components/Modal.svelte";
 	import IconButton from "./components/IconButton.svelte";
+	import Glow from "./components/Glow.svelte";
 	import { liveQuery } from "dexie";
+	import ServerManager from "./layouts/ServerManager.svelte";
 	import { db, library, servers } from "./logic/db";
 	import { authString } from "./logic/utils";
 	import { playing } from "./logic/stores";
 	import Song from "./components/Song.svelte";
+	import { onMount } from "svelte";
 	let openModal = "";
 	$: console.log(openModal);
 	window.db = db;
 	$: console.log("Servers: ", $servers);
 	$: console.log("Library: ", $library);
 	$: console.log("Playing: ", $playing);
+	onMount(async () => {
+		let serversCount = (await db.servers.toArray()).length;
+		if (serversCount == 0) {
+			openModal = "serverManager";
+		}
+	});
 </script>
 
 <main>
 	<div class="header">
 		<svg
 			class="logo"
-			viewBox="0 0 300 100"
+			viewBox="0 0 257 61"
 			fill="none"
+			style="height: calc(var(--input-height) * 0.75)"
 			xmlns="http://www.w3.org/2000/svg"
-			style="height: 100%;"
 		>
-			<path
-				d="M33.2642 50.9574C33.2848 47.353 35.3857 45.2109 38.5781 45.2109C41.7706 45.2109 43.6655 47.3118 43.6449 50.8132V69H53.7166V48.8359C53.7372 41.7095 49.3913 36.9517 42.7386 36.9517C38.0632 36.9517 34.5206 39.3203 33.12 43.1719H32.7699V37.3636H23.1925V69H33.2642V50.9574ZM68.8706 69.5355C73.2782 69.5355 76.3265 67.826 78.0566 64.5923H78.3038V69H87.7782V47.4972C87.7782 40.8033 81.8258 36.9517 73.7726 36.9517C65.2662 36.9517 60.4466 41.2358 59.6433 47.0028L68.9324 47.3324C69.3649 45.3139 71.0332 44.0781 73.6902 44.0781C76.1618 44.0781 77.7271 45.2727 77.7271 47.3942V47.4972C77.7271 49.4332 75.6262 49.8452 70.2299 50.3189C63.8244 50.8544 58.4693 53.223 58.4693 60.2259C58.4693 66.4872 62.8152 69.5355 68.8706 69.5355ZM71.9806 62.9446C69.6532 62.9446 68.0055 61.8324 68.0055 59.7315C68.0055 57.6925 69.612 56.4567 72.475 56.0241C74.3493 55.7564 76.6561 55.3445 77.7889 54.7472V57.7543C77.7889 60.8438 75.1937 62.9446 71.9806 62.9446ZM104.008 50.9574C104.029 47.353 106.13 45.2109 109.322 45.2109C112.515 45.2109 114.41 47.3118 114.389 50.8132V69H124.461V48.8359C124.481 41.7095 120.135 36.9517 113.483 36.9517C108.807 36.9517 105.265 39.3203 103.864 43.1719H103.514V37.3636H93.9366V69H104.008V50.9574ZM145.464 69.5973C155.412 69.5973 161.447 63.027 161.447 53.2848C161.447 43.522 155.412 36.9517 145.464 36.9517C135.516 36.9517 129.481 43.522 129.481 53.2848C129.481 63.027 135.516 69.5973 145.464 69.5973ZM145.526 61.9972C141.798 61.9972 139.738 58.4545 139.738 53.223C139.738 47.9709 141.798 44.4077 145.526 44.4077C149.13 44.4077 151.19 47.9709 151.19 53.223C151.19 58.4545 149.13 61.9972 145.526 61.9972ZM184.464 37.3636H178.759V29.7841H168.687V37.3636H164.506V44.7784H168.687V60.1641C168.625 66.5696 172.786 69.7827 179.891 69.4531C182.322 69.3295 184.072 68.8352 185.04 68.5469L183.516 61.2763C183.084 61.3793 182.075 61.5852 181.312 61.5852C179.685 61.5852 178.759 60.9261 178.759 59.0518V44.7784H184.464V37.3636ZM204.051 69.5973C212.352 69.5973 217.81 65.581 218.963 59.3608L209.715 59.093C208.933 61.1939 206.873 62.3267 204.237 62.3267C200.364 62.3267 197.975 59.7521 197.975 55.88V55.6122H219.066V53.0994C219.066 42.6776 212.722 36.9517 203.742 36.9517C194.185 36.9517 188.048 43.5014 188.048 53.3054C188.048 63.4389 194.103 69.5973 204.051 69.5973ZM197.975 49.7628C198.119 46.6115 200.612 44.2223 203.948 44.2223C207.264 44.2223 209.653 46.5291 209.695 49.7628H197.975Z"
-				style="fill: var(--text)"
-			/>
-			<path
-				d="M281 49.5L229.25 79.3779L229.25 19.6221L281 49.5Z"
-				style="fill: var(--text)"
-			/>
+			<g clip-path="url(#clip0_8_2)">
+				<path
+					d="M9.2642 31.9574C9.2848 28.353 11.3857 26.2109 14.5781 26.2109C17.7706 26.2109 19.6655 28.3118 19.6449 31.8132V50H29.7166V29.8359C29.7372 22.7095 25.3913 17.9517 18.7386 17.9517C14.0632 17.9517 10.5206 20.3203 9.12003 24.1719H8.76989V18.3636H-0.807528V50H9.2642V31.9574ZM44.8706 50.5355C49.2782 50.5355 52.3265 48.826 54.0566 45.5923H54.3038V50H63.7782V28.4972C63.7782 21.8033 57.8258 17.9517 49.7726 17.9517C41.2662 17.9517 36.4466 22.2358 35.6433 28.0028L44.9324 28.3324C45.3649 26.3139 47.0332 25.0781 49.6902 25.0781C52.1618 25.0781 53.7271 26.2727 53.7271 28.3942V28.4972C53.7271 30.4332 51.6262 30.8452 46.2299 31.3189C39.8244 31.8544 34.4693 34.223 34.4693 41.2259C34.4693 47.4872 38.8152 50.5355 44.8706 50.5355ZM47.9806 43.9446C45.6532 43.9446 44.0055 42.8324 44.0055 40.7315C44.0055 38.6925 45.612 37.4567 48.475 37.0241C50.3493 36.7564 52.6561 36.3445 53.7889 35.7472V38.7543C53.7889 41.8438 51.1937 43.9446 47.9806 43.9446ZM80.0083 31.9574C80.0289 28.353 82.1298 26.2109 85.3223 26.2109C88.5147 26.2109 90.4096 28.3118 90.389 31.8132V50H100.461V29.8359C100.481 22.7095 96.1355 17.9517 89.4828 17.9517C84.8074 17.9517 81.2647 20.3203 79.8642 24.1719H79.514V18.3636H69.9366V50H80.0083V31.9574ZM121.464 50.5973C131.412 50.5973 137.447 44.027 137.447 34.2848C137.447 24.522 131.412 17.9517 121.464 17.9517C111.516 17.9517 105.481 24.522 105.481 34.2848C105.481 44.027 111.516 50.5973 121.464 50.5973ZM121.526 42.9972C117.798 42.9972 115.738 39.4545 115.738 34.223C115.738 28.9709 117.798 25.4077 121.526 25.4077C125.13 25.4077 127.19 28.9709 127.19 34.223C127.19 39.4545 125.13 42.9972 121.526 42.9972ZM160.464 18.3636H154.759V10.7841H144.687V18.3636H140.506V25.7784H144.687V41.1641C144.625 47.5696 148.786 50.7827 155.891 50.4531C158.322 50.3295 160.072 49.8352 161.04 49.5469L159.516 42.2763C159.084 42.3793 158.075 42.5852 157.312 42.5852C155.685 42.5852 154.759 41.9261 154.759 40.0518V25.7784H160.464V18.3636ZM180.051 50.5973C188.352 50.5973 193.81 46.581 194.963 40.3608L185.715 40.093C184.933 42.1939 182.873 43.3267 180.237 43.3267C176.364 43.3267 173.975 40.7521 173.975 36.88V36.6122H195.066V34.0994C195.066 23.6776 188.722 17.9517 179.742 17.9517C170.185 17.9517 164.048 24.5014 164.048 34.3054C164.048 44.4389 170.103 50.5973 180.051 50.5973ZM173.975 30.7628C174.119 27.6115 176.612 25.2223 179.948 25.2223C183.264 25.2223 185.653 27.5291 185.695 30.7628H173.975Z"
+					style="fill: var(--text)"
+				/>
+				<path
+					d="M257 30.5L205.25 60.3779L205.25 0.622124L257 30.5Z"
+					style="fill: var(--text)"
+				/>
+			</g>
 		</svg>
 		<div class="horizPanel">
-			<IconButton autoHide icon="storage" on:click={(_) => (openModal = "1")}
-				>Servers</IconButton
-			>
-			<IconButton autoHide icon="search">Search</IconButton>
+			<IconButton
+				icon="storage"
+				on:click={(_) => (openModal = "serverManager")}
+			/>
+			<IconButton icon="search" />
 		</div>
 	</div>
-	<div>
-		<h1>Now Playing</h1>
+	<div style="grid-column: 1 / 2; padding: 32px;">
 		{#if $playing}
-			<img src="" alt="" />
-			<p>{$playing.title} by {$playing.artist}</p>
+			<Glow>
+				{#if $playing.coverUrl}
+					<img
+						src={$playing.server +
+							$playing.coverUrl +
+							"?auth=" +
+							authString($servers, $playing)}
+						alt=""
+						loading="lazy"
+						class="albumCover"
+					/>
+				{:else}
+					<img src="album.svg" alt="" class="albumCover" />
+				{/if}
+			</Glow>
+			<h1>{$playing.title || "--"}</h1>
+			<p>{$playing.artist || "--"} &bull; {$playing.album || "--"}</p>
 			<audio
 				src={$playing.server +
 					$playing.mediaUrl +
@@ -56,7 +82,7 @@
 		{/if}
 	</div>
 	<div
-		style="display: flex; flex-direction: column; padding: 16px; overflow:auto; background-color: var(--bg-light);"
+		style="display: flex; flex-direction: column; padding: 16px; overflow:auto; background-color: var(--bg-light); grid-row: 1/3; grid-column: 2/3; z-index: 1;"
 	>
 		<h1>Songs</h1>
 		<div style="display: flex; flex-direction: column; width: 100%">
@@ -66,30 +92,28 @@
 			{/each}
 		</div>
 	</div>
-	<Modal id="1" bind:open={openModal}>
-		<h1>Servers</h1>
-		{#each $servers || [] as server}
-			<div class="server">
-				<div class="serverName">{server.url}</div>
-				<div class="serverIp">{server.profile}</div>
-				<div class="serverPort">{server.key}</div>
-			</div>
-		{/each}
+	<div
+		style="background-color: #222; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%;"
+	/>
+	<Modal id="serverManager" bind:open={openModal}>
+		<h1>Let's get connected.</h1>
+		<ServerManager />
 	</Modal>
 </main>
 
 <style>
 	main {
 		display: grid;
-		grid-template-rows: 84px auto;
-		grid-template-columns: 1fr 2fr;
+		grid-template-rows: auto 1fr;
+		grid-template-columns: 400px 2fr 1fr;
 		/* flex-direction: column; */
 		/* justify-content: center; */
 		--logo-height: 48px;
 		--pad-top: calc(var(--logo-height) + var(--pad) * 2);
 		width: 100%;
 		height: 100%;
-		column-gap: 12px;
+		/* row-gap: 12px; */
+		/* padding: 12px; */
 		/* max-width: 1000px; */
 	}
 	/* .logo {
@@ -111,6 +135,10 @@
 		gap: calc(0.5 * var(--pad));
 		width: 100%;
 		box-sizing: border-box;
-		grid-column: 1 / 4;
+		/* grid-column: 1 / 4; */
+	}
+	.albumCover {
+		width: 100%;
+		border-radius: 8px;
 	}
 </style>

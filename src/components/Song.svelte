@@ -2,14 +2,23 @@
 	export let song;
 	import { servers } from "../logic/db";
 	import { playing } from "../logic/stores";
-	import { authString } from "./logic/utils";
+	import { authString } from "../logic/utils";
+	let isPlaying = false;
+	$: isPlaying =
+		$playing.server == song.server && $playing.mediaUrl == song.mediaUrl;
 	function playSong() {
 		$playing = song;
 	}
 </script>
 
-<div class="song" on:click={playSong}>
-	<span class="material-icons playIndicator">play_arrow</span>
+<div class={"song" + (isPlaying ? " playing" : "")} on:click={playSong}>
+	<span class="material-icons playIndicator"
+		>{#if isPlaying}
+			equalizer
+		{:else}
+			play_arrow
+		{/if}</span
+	>
 	{#if song.coverUrl}
 		<img
 			src={song.server + song.coverUrl + "?auth=" + authString($servers, song)}
@@ -42,6 +51,9 @@
 		&:hover {
 			background: var(--fg);
 			cursor: pointer;
+		}
+		&:hover,
+		&.playing {
 			.playIndicator {
 				width: 24px;
 				opacity: 1;
@@ -66,8 +78,13 @@
 		flex-direction: column;
 		justify-content: center;
 		height: 100%;
+		flex: 1;
+		overflow: hidden;
 		> * {
 			margin: 0;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
 		}
 	}
 	.albumCover {
