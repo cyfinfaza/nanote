@@ -5,6 +5,15 @@
     "test": "echo \"This template does not include a test runner by default.\" && exit 1"
   },
   "devDependencies": {
-    "snowpack": "^3.3.7"
+    "@snowpack/plugin-svelte": "^3.7.0",
+    "sass": "^1.45.0",
+    "snowpack": "^3.3.7",
+    "svelte-preprocess": "^4.9.8"
+  },
+  "dependencies": {
+    "@snowpack/plugin-sass": "^1.4.0",
+    "dexie": "^3.2.0",
+    "node-sass": "^7.0.0",
+    "svelte": "^3.44.2"
   }
 }
