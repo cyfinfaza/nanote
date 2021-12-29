@@ -1,5 +1,6 @@
 <script>
 	import Browser from "./layouts/Browser.svelte";
+	import GroupPlayback from "./add-ons/GroupPlayback.svelte";
 	import Modal from "./components/Modal.svelte";
 	import IconButton from "./components/IconButton.svelte";
 	import Glow from "./components/Glow.svelte";
@@ -7,7 +8,7 @@
 	import ServerManager from "./layouts/ServerManager.svelte";
 	import { db, library, servers } from "./logic/db";
 	import { authString } from "./logic/utils";
-	import { playing, queue, queueIndex } from "./logic/stores";
+	import { playing, queue, queueIndex, playState } from "./logic/stores";
 	import Song from "./components/Song.svelte";
 	import { onMount } from "svelte";
 	let openModal = "";
@@ -16,6 +17,7 @@
 	$: console.log("Servers: ", $servers);
 	$: console.log("Library: ", $library);
 	$: console.log("Playing: ", $playing);
+	$: console.log("PlayState: ", $playState, Date.now() - $playState.zeroTs);
 	onMount(async () => {
 		let serversCount = (await db.servers.toArray()).length;
 		if (serversCount == 0) {
@@ -23,6 +25,17 @@
 		}
 	});
 	$: $playing = $queue[$queueIndex];
+	let audioElem;
+	$: {
+		if (audioElem) {
+			if ($playState.playing) {
+				audioElem.play();
+				audioElem.currentTime = Date.now() / 1000 - $playState.zeroTs;
+			} else {
+				audioElem.pause();
+			}
+		}
+	}
 </script>
 
 <main>
@@ -76,12 +89,18 @@
 					<img src="album.svg" alt="" class="albumCover" />
 				{/if}
 			</Glow>
-			<h1>{$playing?.title || "--"}</h1>
-			<p>
-				{$playing?.artist || "--"} &bull; {$playing?.album || "--"} &bull; {$playing?.year ||
-					"--"}
-			</p>
+			<div
+				class="vertiPanel"
+				style="margin-block: calc(var(--pad) * 1.5); gap: calc(var(--pad) * 1);"
+			>
+				<h1>{$playing?.title || "--"}</h1>
+				<p>
+					{$playing?.artist || "--"} &bull; {$playing?.album || "--"} &bull; {$playing?.year ||
+						"--"}
+				</p>
+			</div>
 			<audio
+				bind:this={audioElem}
 				src={$playing?.server +
 					$playing?.mediaUrl +
 					"?auth=" +
@@ -90,12 +109,24 @@
 					console.log("going to next");
 					$queueIndex++;
 				}}
+				on:pause={(e) => {
+					console.log(e);
+					$playState = { ...$playState, playing: false };
+				}}
+				on:play={(e) => {
+					$playState = {
+						...$playState,
+						playing: true,
+						zeroTs: Date.now() / 1000 - e.target.currentTime,
+					};
+				}}
 				controls
 				autoplay
+				style="width: 100%;"
 			/>
 			<!-- {/if} -->
 			<h2>Queue</h2>
-			{#each $queue || [] as song, index}
+			{#each ($queue || []).slice(0, 100) as song, index}
 				{#if $queueIndex <= index}
 					<Song {song} list={$queue} {index} />
 				{/if}
@@ -110,14 +141,16 @@
 			style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); width: 100%"
 		>
 			<!-- <div> -->
-			{#each $library || [] as song, index}
+			{#each ($library || []).slice(0, 100) as song, index}
 				<Song list={$library} {index} {song} />
 			{/each}
 		</div>
 	</div>
 	<div
-		style="background-color: #000; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%;"
-	/>
+		style="background-color: #000; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%; padding: var(--pad);"
+	>
+		<GroupPlayback />
+	</div>
 	<Modal id="serverManager" bind:open={openModal}>
 		<h1>Let's get connected.</h1>
 		<ServerManager />
