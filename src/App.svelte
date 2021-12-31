@@ -1,5 +1,4 @@
 <script>
-	import Browser from "./layouts/Browser.svelte";
 	import GroupPlayback from "./add-ons/GroupPlayback.svelte";
 	import Modal from "./components/Modal.svelte";
 	import IconButton from "./components/IconButton.svelte";

@@ -2,12 +2,10 @@
 	import IconButton from "./IconButton.svelte";
 	export let open;
 	export let id;
-	let className;
-	$: className = "modal" + (open === id ? " open" : "");
 	$: console.log(open);
 </script>
 
-<div class={className}>
+<div class="modal" class:open={open === id}>
 	<div>
 		<IconButton
 			icon="close"
@@ -52,9 +50,9 @@
 			transform: scale(1);
 		}
 	}
-	.modalClose {
-		position: absolute;
-		top: 16;
-		right: 16;
-	}
+	// .modalClose {
+	// 	position: absolute;
+	// 	top: 16;
+	// 	right: 16;
+	// }
 </style>

@@ -23,7 +23,9 @@
 </script>
 
 <div
-	class={"song" + (isPlaying ? " playing" : "") + (disabled ? " disabled" : "")}
+	class="song"
+	class:playing={isPlaying}
+	class:disabled
 	on:click={!disabled && playSong}
 >
 	<span class="material-icons playIndicator"

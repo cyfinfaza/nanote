@@ -115,7 +115,7 @@
 	}
 </script>
 
-<div class={connected ? "connected" : ""}>
+<div class:connected>
 	<h1>Remote/Group Playback</h1>
 	<div class="optionsGrid">
 		<input
