@@ -34,7 +34,7 @@
 	{/if}
 	<div class="items">
 		{#each (offsetList || []).slice(startIndex, startIndex + maxItems) as item, index}
-			<slot {item} {list} {index} />
+			<slot {item} {list} index={index + startIndex + startOffset} />
 		{/each}
 	</div>
 </div>
