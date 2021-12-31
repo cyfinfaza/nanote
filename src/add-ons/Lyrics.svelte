@@ -25,7 +25,7 @@
 	<div>
 		<h1>Lyrics</h1>
 		<p>
-			{#each lyrics.split("\n").slice(1) as line}
+			{#each lyrics.split("\n") as line}
 				{line}<br />
 			{/each}
 		</p>
