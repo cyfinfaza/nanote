@@ -10,6 +10,7 @@
 	import { authString } from "./logic/utils";
 	import { playing, queue, queueIndex, playState } from "./logic/stores";
 	import Song from "./components/Song.svelte";
+	import SongList from "./components/SongList.svelte";
 	import { onMount } from "svelte";
 	let openModal = "";
 	$: console.log(openModal);
@@ -126,25 +127,19 @@
 			/>
 			<!-- {/if} -->
 			<h2>Queue</h2>
-			{#each ($queue || []).slice(0, 100) as song, index}
+			<!-- {#each ($queue || []).slice(0, 100) as song, index}
 				{#if $queueIndex <= index}
 					<Song {song} list={$queue} {index} />
 				{/if}
-			{/each}
+			{/each} -->
+			<SongList list={($queue || []).slice()} startOffset={$queueIndex} />
 		</div>
 	</div>
 	<div
 		style="display: flex; flex-direction: column; padding: 16px; overflow:auto; background-color: var(--bg-light); grid-row: 1/3; grid-column: 2/3; z-index: 1;"
 	>
 		<h1>Songs</h1>
-		<div
-			style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); width: 100%"
-		>
-			<!-- <div> -->
-			{#each ($library || []).slice(0, 100) as song, index}
-				<Song list={$library} {index} {song} />
-			{/each}
-		</div>
+		<SongList list={$library} />
 	</div>
 	<div
 		style="background-color: #000; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%; padding: var(--pad);"
@@ -161,7 +156,7 @@
 	main {
 		display: grid;
 		grid-template-rows: 1fr;
-		grid-template-columns: 400px 2fr 1fr;
+		grid-template-columns: 400px 2fr minmax(0, 1fr);
 		/* flex-direction: column; */
 		/* justify-content: center; */
 		--logo-height: 48px;
