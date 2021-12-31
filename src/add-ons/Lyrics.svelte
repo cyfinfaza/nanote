@@ -25,7 +25,10 @@
 	<div>
 		<h1>Lyrics</h1>
 		<p>
-			{#each lyrics.split("\n") as line}
+			{#each lyrics
+				.trim()
+				.split("\n")
+				.slice(lyrics.trim().indexOf("Paroles") == 0 ? 1 : 0) as line}
 				{line}<br />
 			{/each}
 		</p>
