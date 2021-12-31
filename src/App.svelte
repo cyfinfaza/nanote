@@ -1,5 +1,6 @@
 <script>
 	import GroupPlayback from "./add-ons/GroupPlayback.svelte";
+	import Lyrics from "./add-ons/Lyrics.svelte";
 	import Modal from "./components/Modal.svelte";
 	import IconButton from "./components/IconButton.svelte";
 	import Glow from "./components/Glow.svelte";
@@ -141,9 +142,10 @@
 		<SongList list={$library} />
 	</div>
 	<div
-		style="background-color: #000; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%; padding: var(--pad);"
+		style="background-color: #000; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%; padding: var(--pad); overflow-y: auto;"
 	>
 		<GroupPlayback />
+		<Lyrics />
 	</div>
 	<Modal id="serverManager" bind:open={openModal}>
 		<h1>Let's get connected.</h1>
