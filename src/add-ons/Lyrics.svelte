@@ -4,6 +4,9 @@
 	let lyrics = "";
 	async function fetchLyrics(song) {
 		// fetch lyrics from lyrics.ovh
+		if (!song) {
+			return;
+		}
 		hasLyrics = false;
 		const response = await fetch(
 			`https://api.lyrics.ovh/v1/${song.artist}/${song.title}`

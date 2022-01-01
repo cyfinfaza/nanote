@@ -1,5 +1,9 @@
 <script>
 	import GroupPlayback from "./add-ons/GroupPlayback.svelte";
+	import LibraryView from "./layouts/LibraryView.svelte";
+	import AlbumView from "./layouts/AlbumView.svelte";
+	import ArtistView from "./layouts/ArtistView.svelte";
+	import Search from "./layouts/Search.svelte";
 	import Lyrics from "./add-ons/Lyrics.svelte";
 	import Modal from "./components/Modal.svelte";
 	import IconButton from "./components/IconButton.svelte";
@@ -8,7 +12,15 @@
 	import ServerManager from "./layouts/ServerManager.svelte";
 	import { db, library, servers } from "./logic/db";
 	import { authString } from "./logic/utils";
-	import { playing, queue, queueIndex, playState } from "./logic/stores";
+	import {
+		playing,
+		queue,
+		queueIndex,
+		playState,
+		browserHistory,
+		browserHistoryIndex,
+		browse,
+	} from "./logic/stores";
 	import Song from "./components/Song.svelte";
 	import SongList from "./components/SongList.svelte";
 	import { onMount } from "svelte";
@@ -26,6 +38,9 @@
 		}
 	});
 	$: $playing = $queue[$queueIndex];
+	let browsing = {};
+	$: browsing = $browserHistory[$browserHistoryIndex];
+	$: console.log("browserHistoryIndex: ", $browserHistoryIndex);
 	let audioElem;
 	$: {
 		if (audioElem) {
@@ -68,7 +83,10 @@
 					icon="storage"
 					on:click={(_) => (openModal = "serverManager")}
 				/>
-				<IconButton icon="search" />
+				<IconButton
+					icon="search"
+					on:click={(_) => browse("search", "Search")}
+				/>
 			</div>
 		</div>
 		<div
@@ -127,19 +145,46 @@
 			/>
 			<!-- {/if} -->
 			<h2>Queue</h2>
-			<!-- {#each ($queue || []).slice(0, 100) as song, index}
-				{#if $queueIndex <= index}
-					<Song {song} list={$queue} {index} />
-				{/if}
-			{/each} -->
-			<SongList list={($queue || []).slice()} startOffset={$queueIndex} />
+			<SongList list={$queue} startOffset={$queueIndex} />
 		</div>
 	</div>
-	<div
-		style="display: flex; flex-direction: column; padding: 16px; overflow:auto; background-color: var(--bg-light); grid-row: 1/3; grid-column: 2/3; z-index: 1;"
-	>
-		<h1>Songs</h1>
-		<SongList list={$library} />
+	<div class="browser">
+		<div class="horizPanel browserControls">
+			<IconButton
+				icon="arrow_back"
+				on:click={(_) => {
+					if ($browserHistoryIndex > 0) {
+						$browserHistoryIndex--;
+					}
+				}}
+			/>
+			<IconButton
+				icon="arrow_forward"
+				on:click={(_) => {
+					if ($browserHistoryIndex < $browserHistory.length - 1)
+						$browserHistoryIndex++;
+				}}
+			/>
+			<IconButton icon="home" on:click={(_) => browse("home", "Library")} />
+			<h2>
+				{browsing.title}
+			</h2>
+		</div>
+		<div class="browserPanels">
+			{#each $browserHistory as browsing, i}
+				<div class="browserPanel" class:hidden={i != $browserHistoryIndex}>
+					{#if browsing.view == "home"}
+						<LibraryView {...browsing.props} />
+					{:else if browsing.view == "album"}
+						<AlbumView {...browsing.props} />
+					{:else if browsing.view == "artist"}
+						<ArtistView {...browsing.props} />
+					{:else if browsing.view == "search"}
+						<Search {...browsing.props} />
+					{/if}
+				</div>
+			{/each}
+		</div>
 	</div>
 	<div
 		style="background-color: #000; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%; padding: var(--pad); overflow-y: auto;"
@@ -153,7 +198,7 @@
 	</Modal>
 </main>
 
-<style>
+<style lang="scss">
 	main {
 		display: grid;
 		grid-template-rows: 1fr;
@@ -192,5 +237,53 @@
 	.albumCover {
 		width: 100%;
 		border-radius: 8px;
+	}
+	.browser {
+		display: flex;
+		flex-direction: column;
+		// width: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
+		background-color: var(--bg-light);
+		grid-row: 1/3;
+		grid-column: 2/3;
+		z-index: 1;
+		.browserControls {
+			> * {
+				margin: 0;
+			}
+		}
+	}
+	.browserControls {
+		// margin-bottom: var(--pad);
+		padding: var(--pad);
+	}
+	.browserPanels {
+		// overflow: auto;
+		position: relative;
+	}
+	@keyframes panelIn {
+		from {
+			transform: scale(0.85);
+			opacity: 0;
+		}
+	}
+	.browserPanel {
+		width: 100%;
+		// transform-origin: 50% 50vw;
+		// --transition: 240ms cubic-bezier(0.79, 0, 0.14, 1);
+		// transition: var(--transition);
+		// animation: panelIn var(--transition);
+		position: absolute;
+		padding: var(--pad);
+		padding-top: 0;
+		// left: 0;
+		// right: 0;
+		&.hidden {
+			// transform: scale(0.85);
+			// opacity: 0;
+			// pointer-events: none;
+			display: none;
+		}
 	}
 </style>

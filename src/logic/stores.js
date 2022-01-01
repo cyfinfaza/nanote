@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 
 export const playing = writable({});
 export const playState = writable({ playing: false, zeroTs: Infinity });
@@ -19,3 +19,21 @@ loading.subscribe((next) => {
 		document.body.classList.remove("loading");
 	}
 });
+
+export const browserHistory = writable([
+	{ view: "home", title: "Library", props: [] },
+]);
+export const browserHistoryIndex = writable(0);
+export function browse(view, title, props) {
+	const newPage = { view, title, props };
+	if (
+		JSON.stringify(get(browserHistory)[get(browserHistoryIndex)]) !==
+		JSON.stringify(newPage)
+	) {
+		browserHistory.update((history) => [
+			...history.slice(0, get(browserHistoryIndex) + 1),
+			newPage,
+		]);
+		browserHistoryIndex.update((index) => index + 1);
+	}
+}

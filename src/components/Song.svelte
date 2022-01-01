@@ -47,7 +47,10 @@
 	{/if}
 	<div class="songName">
 		<h3>{song.title}</h3>
-		<p>{song.artist} &bull; {song.album} &bull; {song.year}</p>
+		<p>
+			{song.artist} &bull; {song.album}
+			{#if song.year} &bull; {song.year}{/if}
+		</p>
 	</div>
 </div>
 

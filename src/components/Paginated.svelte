@@ -2,7 +2,7 @@
 	import IconButton from "./IconButton.svelte";
 	export let list = [];
 	export let startOffset = 0;
-	let maxItems = 100;
+	export let maxItems = 100;
 	let interval = maxItems;
 	let startIndex = 0;
 	let offsetList = [];
