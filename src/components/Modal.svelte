@@ -18,7 +18,7 @@
 
 <style lang="scss">
 	.modal {
-		position: absolute;
+		position: fixed;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -28,7 +28,7 @@
 		--transition: 240ms cubic-bezier(0.87, 0.01, 0.1, 0.99);
 		transition: var(--transition);
 		pointer-events: none;
-		z-index: 99;
+		z-index: 200;
 		> div {
 			width: 80%;
 			// height: 80%;
@@ -44,10 +44,27 @@
 	}
 	.modal.open {
 		opacity: 1;
-		z-index: 100;
+		z-index: 200;
 		pointer-events: all;
 		> div {
 			transform: scale(1);
+		}
+	}
+	@media screen and (max-width: 800px) {
+		.modal {
+			> div {
+				max-width: 100%;
+				max-height: 100%;
+				width: 100%;
+				height: 100%;
+				transform: translateY(100%);
+				transition-duration: 400ms;
+			}
+			transition-duration: 400ms;
+			position: static;
+			grid-row: 1/3;
+			grid-column: 1/2;
+			padding-top: 32px;
 		}
 	}
 	// .modalClose {

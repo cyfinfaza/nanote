@@ -8,6 +8,8 @@ body {
   --fg-hover: #fff3;
   --fg-light: #fff6;
   --text: #fff;
+  --button-accent: #fff;
+  --button-accent-text: #000;
   --pad: 16px;
   --input-height: 44px;
 }

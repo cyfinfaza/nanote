@@ -11,10 +11,13 @@
     "svelte-preprocess": "^4.9.8"
   },
   "dependencies": {
+    "@snowpack/plugin-postcss": "^1.4.3",
     "@snowpack/plugin-sass": "^1.4.0",
+    "autoprefixer": "github:postcss/autoprefixer",
     "dexie": "^3.2.0",
     "node-sass": "^7.0.0",
     "paho-mqtt": "^1.1.0",
+    "postcss": "^8.4.12",
     "svelte": "^3.44.2"
   }
 }

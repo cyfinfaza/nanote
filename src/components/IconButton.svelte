@@ -5,9 +5,10 @@
 	export let autoHide = false;
 	let props;
 	$: props = { style: $$props.style, class: $$props.class };
+	export let accent = false;
 </script>
 
-<button {...props} on:click={(_) => dispatch("click")}>
+<button {...props} on:click={(_) => dispatch("click")} class:accent>
 	<span class="material-icons">{icon}</span>
 	{#if autoHide}
 		<div class="hideOnMobile">
@@ -23,5 +24,9 @@
 		.hideOnMobile {
 			display: none;
 		}
+	}
+	.accent {
+		background: var(--button-accent);
+		color: var(--button-accent-text);
 	}
 </style>

@@ -19,6 +19,7 @@
 		playState,
 		browserHistory,
 		browserHistoryIndex,
+		currentPanel,
 		browse,
 	} from "./logic/stores";
 	import Song from "./components/Song.svelte";
@@ -55,11 +56,8 @@
 </script>
 
 <main>
-	<div
-		class="left"
-		style="overflow-y: auto; display: flex; flex-direction: column; height: 100%;"
-	>
-		<div class="header" style="background-color: #222">
+	<div class="left" class:panelOpen={$currentPanel == "player"}>
+		<div class="header">
 			<svg
 				class="logo"
 				viewBox="0 0 257 61"
@@ -89,9 +87,7 @@
 				/>
 			</div>
 		</div>
-		<div
-			style="grid-column: 1 / 2; padding: 28px; background-color: #222; flex: 1;"
-		>
+		<div class="player">
 			<!-- {#if $playing} -->
 			<Glow>
 				{#if $playing?.coverUrl}
@@ -148,7 +144,7 @@
 			<SongList list={$queue} startOffset={$queueIndex} />
 		</div>
 	</div>
-	<div class="browser">
+	<div class="browser" class:panelOpen={$currentPanel == "browser"}>
 		<div class="horizPanel browserControls">
 			<IconButton
 				icon="arrow_back"
@@ -186,9 +182,7 @@
 			{/each}
 		</div>
 	</div>
-	<div
-		style="background-color: #000; grid-row: 1/3; grid-column: 3/4; height: 100%; width: 100%; padding: var(--pad); overflow-y: auto;"
-	>
+	<div class="add-ons" class:panelOpen={$currentPanel == "add-ons"}>
 		<GroupPlayback />
 		<Lyrics />
 	</div>
@@ -196,6 +190,40 @@
 		<h1>Let's get connected.</h1>
 		<ServerManager />
 	</Modal>
+	<div class="mobileMenu horizPanel">
+		<svg
+			viewBox="0 0 92 60"
+			xmlns="http://www.w3.org/2000/svg"
+			class="smallLogo"
+		>
+			<g>
+				<path
+					d="M10.2642 27.9574V46H0.192472V14.3636H9.76989V20.1719H10.12C10.8203 18.2358 12.0149 16.7185 13.7038 15.62C15.3928 14.5078 17.4044 13.9517 19.7386 13.9517C21.9631 13.9517 23.8923 14.4529 25.5263 15.4553C27.174 16.4439 28.451 17.8307 29.3572 19.6158C30.2772 21.3871 30.7304 23.4605 30.7166 25.8359V46H20.6449V27.8132C20.6586 26.0556 20.2124 24.6825 19.3061 23.6939C18.4136 22.7053 17.1709 22.2109 15.5781 22.2109C14.5208 22.2109 13.5871 22.4444 12.777 22.9112C11.9806 23.3643 11.3627 24.0166 10.9233 24.8679C10.4976 25.7192 10.2779 26.7491 10.2642 27.9574Z"
+				/>
+				<path d="M92 30.5L40.25 60.3779L40.25 0.622124L92 30.5Z" />
+			</g>
+		</svg>
+		<IconButton
+			icon="play_arrow"
+			accent={$currentPanel == "player"}
+			on:click={(_) => ($currentPanel = "player")}
+		/>
+		<IconButton
+			icon="library_music"
+			accent={$currentPanel == "browser"}
+			on:click={(_) => ($currentPanel = "browser")}
+		/>
+		<IconButton
+			icon="add"
+			accent={$currentPanel == "add-ons"}
+			on:click={(_) => ($currentPanel = "add-ons")}
+		/>
+		<IconButton
+			icon="storage"
+			on:click={(_) => (openModal = "serverManager")}
+		/>
+		<IconButton icon="search" on:click={(_) => browse("search", "Search")} />
+	</div>
 </main>
 
 <style lang="scss">
@@ -218,10 +246,12 @@
 		top: var(--pad);
 		height: var(--logo-height);
 	} */
-	@media screen and (max-width: 800px) {
-		div {
-			display: none;
-		}
+	.smallLogo {
+		height: 24px;
+		fill: var(--text);
+		margin-right: 8px;
+		// opacity: 0.5;
+		// justify-self: flex-start;
 	}
 	.header {
 		padding: var(--pad);
@@ -232,11 +262,24 @@
 		gap: calc(0.5 * var(--pad));
 		width: 100%;
 		box-sizing: border-box;
+		// grid-row: 1 / 2;
+		// grid-column: 1 / 2;
+		// z-index: 9;
 		/* grid-column: 1 / 4; */
 	}
-	.albumCover {
-		width: 100%;
-		border-radius: 8px;
+	.player {
+		// grid-row: 2 / 3;
+		// grid-column: 1 / 2;
+		padding: 28px;
+		flex: 1;
+		// overflow: auto;
+	}
+	.left {
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		background-color: #222;
 	}
 	.browser {
 		display: flex;
@@ -245,14 +288,27 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 		background-color: var(--bg-light);
-		grid-row: 1/3;
-		grid-column: 2/3;
+		grid-row: 1 / 3;
+		grid-column: 2 / 3;
 		z-index: 1;
 		.browserControls {
 			> * {
 				margin: 0;
 			}
 		}
+	}
+	.add-ons {
+		background-color: #000;
+		grid-row: 1 / 3;
+		grid-column: 3 / 4;
+		height: 100%;
+		width: 100%;
+		padding: var(--pad);
+		overflow-y: auto;
+	}
+	.albumCover {
+		width: 100%;
+		border-radius: 8px;
 	}
 	.browserControls {
 		// margin-bottom: var(--pad);
@@ -261,6 +317,9 @@
 	.browserPanels {
 		// overflow: auto;
 		position: relative;
+	}
+	.panelOpen {
+		z-index: 10;
 	}
 	@keyframes panelIn {
 		from {
@@ -284,6 +343,53 @@
 			// opacity: 0;
 			// pointer-events: none;
 			display: none;
+		}
+	}
+	.mobileMenu {
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+		z-index: 100;
+		padding: var(--pad);
+		justify-content: center;
+		background-color: #222b;
+		backdrop-filter: blur(16px);
+		display: none;
+	}
+	@media screen and (max-width: 800px) {
+		main {
+			grid-template-rows: 1fr;
+			grid-template-columns: 1fr;
+			// overflow-y: auto;
+			& > {
+				* {
+					width: 100%;
+				}
+				*:not(.mobileMenu) {
+					// margin-top: calc(var(--pad) * 2 + var(--input-height));
+					padding-bottom: calc(var(--pad) * 3 + var(--input-height));
+					grid-row: 1/2;
+					grid-column: 1/2;
+				}
+				.browser,
+				.add-ons,
+				.left {
+					background-color: #111;
+				}
+				// .header {
+				// 	background-color: #111b;
+				// 	backdrop-filter: blur(16px);
+				// }
+			}
+		}
+		.header {
+			display: none;
+		}
+		.browserPanels > * {
+			padding-bottom: calc(var(--pad) * 3 + var(--input-height));
+		}
+		.mobileMenu {
+			display: flex;
 		}
 	}
 </style>
