@@ -79,17 +79,14 @@
 			<div class="horizPanel">
 				<IconButton
 					icon="storage"
-					on:click={(_) => (openModal = "serverManager")}
+					on:click={_ => (openModal = "serverManager")}
 				/>
-				<IconButton
-					icon="search"
-					on:click={(_) => browse("search", "Search")}
-				/>
+				<IconButton icon="search" on:click={_ => browse("search", "Search")} />
 			</div>
 		</div>
 		<div class="player">
 			<!-- {#if $playing} -->
-			<Glow>
+			<Glow noMobile>
 				{#if $playing?.coverUrl}
 					<img
 						src={$playing.server +
@@ -120,15 +117,15 @@
 					$playing?.mediaUrl +
 					"?auth=" +
 					authString($servers, $playing)}
-				on:ended={(_) => {
+				on:ended={_ => {
 					console.log("going to next");
 					$queueIndex++;
 				}}
-				on:pause={(e) => {
+				on:pause={e => {
 					console.log(e);
 					$playState = { ...$playState, playing: false };
 				}}
-				on:play={(e) => {
+				on:play={e => {
 					$playState = {
 						...$playState,
 						playing: true,
@@ -148,7 +145,7 @@
 		<div class="horizPanel browserControls">
 			<IconButton
 				icon="arrow_back"
-				on:click={(_) => {
+				on:click={_ => {
 					if ($browserHistoryIndex > 0) {
 						$browserHistoryIndex--;
 					}
@@ -156,12 +153,12 @@
 			/>
 			<IconButton
 				icon="arrow_forward"
-				on:click={(_) => {
+				on:click={_ => {
 					if ($browserHistoryIndex < $browserHistory.length - 1)
 						$browserHistoryIndex++;
 				}}
 			/>
-			<IconButton icon="home" on:click={(_) => browse("home", "Library")} />
+			<IconButton icon="home" on:click={_ => browse("home", "Library")} />
 			<h2>
 				{browsing.title}
 			</h2>
@@ -206,23 +203,20 @@
 		<IconButton
 			icon="play_arrow"
 			accent={$currentPanel == "player"}
-			on:click={(_) => ($currentPanel = "player")}
+			on:click={_ => ($currentPanel = "player")}
 		/>
 		<IconButton
 			icon="library_music"
 			accent={$currentPanel == "browser"}
-			on:click={(_) => ($currentPanel = "browser")}
+			on:click={_ => ($currentPanel = "browser")}
 		/>
 		<IconButton
 			icon="add"
 			accent={$currentPanel == "add-ons"}
-			on:click={(_) => ($currentPanel = "add-ons")}
+			on:click={_ => ($currentPanel = "add-ons")}
 		/>
-		<IconButton
-			icon="storage"
-			on:click={(_) => (openModal = "serverManager")}
-		/>
-		<IconButton icon="search" on:click={(_) => browse("search", "Search")} />
+		<IconButton icon="storage" on:click={_ => (openModal = "serverManager")} />
+		<IconButton icon="search" on:click={_ => browse("search", "Search")} />
 	</div>
 </main>
 
@@ -230,7 +224,7 @@
 	main {
 		display: grid;
 		grid-template-rows: 1fr;
-		grid-template-columns: 400px 2fr minmax(0, 1fr);
+		grid-template-columns: minmax(280px, 1fr) 2fr minmax(250px, 1fr);
 		/* flex-direction: column; */
 		/* justify-content: center; */
 		--logo-height: 48px;
@@ -390,6 +384,15 @@
 		}
 		.mobileMenu {
 			display: flex;
+		}
+		.left {
+			display: flex;
+			align-items: center;
+		}
+		.player {
+			max-width: 500px;
+			width: 100%;
+			padding: var(--pad);
 		}
 	}
 </style>
