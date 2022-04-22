@@ -1,0 +1,6 @@
+{
+	"appId": "me.cy2.nanote",
+	"appName": "nanote",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
