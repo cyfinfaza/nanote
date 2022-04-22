@@ -22,7 +22,7 @@
 		try {
 			newServerProfiles = await (
 				await (await fetch(newServerAddress + "/users")).json()
-			).filter(async (profile) => {
+			).filter(async profile => {
 				return (
 					(await db.servers
 						.where({ url: newServerAddress, profile: profile.user })
@@ -76,7 +76,7 @@
 			<h2>Libraries</h2>
 			{#each $servers || [] as server}
 				<div class="server">
-					<IconButton icon="delete" on:click={(_) => deleteServer(server)} />
+					<IconButton icon="delete" on:click={_ => deleteServer(server)} />
 					<img
 						src={server.url + "/userImg/" + server.profile}
 						style="border-radius: 50%; height: 100%; aspect-ratio: 1/1"
@@ -95,7 +95,7 @@
 		<h4>Connect to a server</h4>
 		<Prompt
 			prompt="https://nanote.example.com"
-			onSubmit={(e) => setNewServerAddress(e)}
+			onSubmit={e => setNewServerAddress(e)}
 		/>
 		{#if newServerProfiles.length > 0}
 			<h4>Select a profile</h4>
@@ -105,7 +105,7 @@
 						class="server"
 						style={"width: unset; padding-inline-end: 16px;" +
 							(selectedProfile == i && "border-left: 8px solid var(--text);")}
-						on:click={(_) => (selectedProfile = i)}
+						on:click={_ => (selectedProfile = i)}
 					>
 						<img
 							src={newServerAddress + "/userImg/" + server.user}
@@ -121,7 +121,7 @@
 			<h4>Unlock &amp; add</h4>
 			<Prompt
 				prompt="Enter password"
-				onSubmit={(e) => tryConnect(e)}
+				onSubmit={e => tryConnect(e)}
 				submitIcon="done"
 				password
 			/>
@@ -160,6 +160,8 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		overflow: hidden;
+		// text-overflow: ellipsis;
 		> * {
 			margin: 0;
 		}

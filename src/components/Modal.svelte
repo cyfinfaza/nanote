@@ -9,7 +9,7 @@
 	<div>
 		<IconButton
 			icon="close"
-			on:click={(_) => (open = "")}
+			on:click={_ => (open = "")}
 			style="position: fixed; top: 16px; right: 16px;"
 		/>
 		<slot />
@@ -53,9 +53,9 @@
 	@media screen and (max-width: 800px) {
 		.modal {
 			> div {
-				max-width: 100%;
+				max-width: 100vw;
 				max-height: 100%;
-				width: 100%;
+				width: 100vw;
 				height: 100%;
 				transform: translateY(100%);
 				transition-duration: 400ms;
