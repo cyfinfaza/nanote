@@ -11,7 +11,7 @@
 	import { liveQuery } from "dexie";
 	import ServerManager from "./layouts/ServerManager.svelte";
 	import { db, library, servers } from "./logic/db";
-	import { authString } from "./logic/utils";
+	import { authString, arrayShuffle } from "./logic/utils";
 	import {
 		playing,
 		queue,
@@ -53,6 +53,7 @@
 			}
 		}
 	}
+	let showingAll = false;
 </script>
 
 <main>
@@ -138,7 +139,26 @@
 			/>
 			<!-- {/if} -->
 			<h2>Queue</h2>
-			<SongList list={$queue} startOffset={$queueIndex} />
+			<div class="horizPanel" style="margin-block: calc(var(--pad) * 1.5);">
+				<!-- shuffle button -->
+				<IconButton
+					icon="shuffle"
+					on:click={_ => {
+						let currentSong = $queue.splice($queueIndex, 1)[0];
+						$queue = [currentSong, ...arrayShuffle($queue)];
+						$queueIndex = 0;
+					}}>Shuffle</IconButton
+				>
+				<!-- show all button -->
+				<IconButton
+					icon="list"
+					accent={showingAll}
+					on:click={_ => {
+						showingAll = !showingAll;
+					}}>Show All</IconButton
+				>
+			</div>
+			<SongList list={$queue} startOffset={showingAll ? 0 : $queueIndex} />
 		</div>
 	</div>
 	<div class="browser" class:panelOpen={$currentPanel == "browser"}>
