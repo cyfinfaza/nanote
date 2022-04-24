@@ -139,25 +139,27 @@
 			/>
 			<!-- {/if} -->
 			<h2>Queue</h2>
-			<div class="horizPanel" style="margin-block: calc(var(--pad) * 1.5);">
-				<!-- shuffle button -->
-				<IconButton
-					icon="shuffle"
-					on:click={_ => {
-						let currentSong = $queue.splice($queueIndex, 1)[0];
-						$queue = [currentSong, ...arrayShuffle($queue)];
-						$queueIndex = 0;
-					}}>Shuffle</IconButton
-				>
-				<!-- show all button -->
-				<IconButton
-					icon="list"
-					accent={showingAll}
-					on:click={_ => {
-						showingAll = !showingAll;
-					}}>Show All</IconButton
-				>
-			</div>
+			{#if $queue.length > 0}
+				<div class="horizPanel" style="margin-block: calc(var(--pad) * 1.5);">
+					<!-- shuffle button -->
+					<IconButton
+						icon="shuffle"
+						on:click={_ => {
+							let currentSong = $queue.splice($queueIndex, 1)[0];
+							$queue = [currentSong, ...arrayShuffle($queue)];
+							$queueIndex = 0;
+						}}>Shuffle</IconButton
+					>
+					<!-- show all button -->
+					<IconButton
+						icon="list"
+						accent={showingAll}
+						on:click={_ => {
+							showingAll = !showingAll;
+						}}>Show All</IconButton
+					>
+				</div>
+			{/if}
 			<SongList list={$queue} startOffset={showingAll ? 0 : $queueIndex} />
 		</div>
 	</div>
