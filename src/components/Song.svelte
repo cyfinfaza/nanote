@@ -2,6 +2,8 @@
 	export let song;
 	export let list;
 	export let index;
+	import { onMount } from "svelte";
+	import CoverImage from "./CoverImage.svelte";
 	// if (list && index) {
 	// 	song = list[index];
 	// }
@@ -20,6 +22,15 @@
 		$queue = [...list];
 		$queueIndex = index;
 	}
+	let songImage;
+	onMount((_) => {
+		console.log("song mounted");
+	});
+	let loaded = false;
+	$: {
+		song;
+		loaded = false;
+	}
 </script>
 
 <div
@@ -35,16 +46,9 @@
 			play_arrow
 		{/if}</span
 	>
-	{#if song.coverUrl && authString($servers, song)}
-		<img
-			src={song.server + song.coverUrl + "?auth=" + authString($servers, song)}
-			alt=""
-			loading="lazy"
-			class="albumCover"
-		/>
-	{:else}
-		<img src="album.svg" alt="" class="albumCover" />
-	{/if}
+	<div class="albumCover">
+		<CoverImage item={song} />
+	</div>
 	<div class="songName">
 		<h3>{song.title}</h3>
 		<p>
@@ -109,7 +113,10 @@
 	.albumCover {
 		grid-row: 1 / 3;
 		height: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
 		border-radius: 4px;
+		overflow: hidden;
 		z-index: 1;
 	}
 </style>

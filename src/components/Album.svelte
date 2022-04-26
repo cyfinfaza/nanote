@@ -1,5 +1,6 @@
 <script>
 	export let album;
+	import CoverImage from "./CoverImage.svelte";
 	import { servers } from "../logic/db";
 	import { authString } from "../logic/utils";
 	import { browse } from "../logic/stores";
@@ -13,19 +14,9 @@
 			primaryKey: [album.album, album.artist, album.year],
 		})}
 >
-	{#if album.coverUrl && authString($servers, album)}
-		<img
-			src={album.server +
-				album.coverUrl +
-				"?auth=" +
-				authString($servers, album)}
-			alt=""
-			loading="lazy"
-			class="albumCover"
-		/>
-	{:else}
-		<img src="album.svg" alt="" class="albumCover" />
-	{/if}
+	<div class="albumCover">
+		<CoverImage item={album} />
+	</div>
 	<div class="albumName">
 		<h2>{album.album}</h2>
 		<p>
@@ -76,6 +67,8 @@
 		grid-row: 1 / 3;
 		height: 100%;
 		border-radius: 4px;
+		overflow: hidden;
+		aspect-ratio: 1;
 		z-index: 1;
 	}
 </style>
